@@ -1,0 +1,41 @@
+name: Deploy to Server
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+    workflow_run:
+        workflows: ["Docker Image CI"]
+        types:
+            - completed
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Set up SSH Agent
+              uses: webfactory/ssh-agent@v0.5.4
+              with:
+                ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+
+            - name: Configure SSH Alias
+              run: |
+                mkdir -p ~/.ssh
+                echo "Host deploy_server" >> ~/.ssh/config
+                echo "  HostName ${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/config
+                echo "  User ${{ secrets.DEPLOY_USER }}" >> ~/.ssh/config
+                echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+
+            - name: Copy Deploy Path to server
+              run: |
+                cd deploy && scp -r * deploy_server:${{ secrets.DEPLOY_PATH }}
+
+            - name: Execute Deployment
+              run: |
+                ssh deploy_server "cd ${{ secrets.DEPLOY_PATH }} && make deploy"
