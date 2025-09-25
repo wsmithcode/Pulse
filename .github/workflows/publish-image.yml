@@ -47,7 +47,7 @@ jobs:
           file: ./pulse-app/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/pulse-app:latest
+            ghcr.io/${{ secrets.DOCKER_GHCR_USER }}/pulse-app:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
