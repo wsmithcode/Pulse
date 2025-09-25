@@ -35,7 +35,7 @@ jobs:
           file: ./pulse-app/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ secrets.DOCKER_GHCR_USER }}/pulse-app:${{ steps.vars.outputs.SHORT_SHA }}
+            ghcr.io/${{ secrets.DOCKER_GHCR_USER }}/pulse-app-ghcr:${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -47,7 +47,6 @@ jobs:
           file: ./pulse-app/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ secrets.DOCKER_GHCR_USER }}/pulse-app:latest
+            ghcr.io/${{ secrets.DOCKER_GHCR_USER }}/pulse-app-ghcr:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
