@@ -1,7 +1,5 @@
 FROM node:lts-slim AS builder
 
-ENV NODE_ENV=production
-
 WORKDIR /app
 
 COPY package.json package-lock.json ./
